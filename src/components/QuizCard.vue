@@ -1,4 +1,3 @@
-
 <template>
     <div class="wrapper">
         <img class="icon1" src="../assets/img/img-1.png" />
@@ -31,9 +30,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import CountdownTimer from "./CountdownTimer.vue";
-
+import axios from "axios";
+import { api } from "../api";
 const status = false;
 
+//get questions from api
+// const questions = axios.get(api).then((res) => {
+//     console.log(res.data);
+//     res.data;
+// });
 const questions = [
     {
         "question":"what is 1 + 1 ",
@@ -69,6 +74,10 @@ const showScore = ref(false);
 const submitAnswer = () => { 
     if (selectedQuestion.value.correctAnswer == selectedOption.value) {
         score.value++;
+    }
+    if(selectedOption.value == ""){
+        alert("please select an answer");
+        questionCount.value--
     }
     if (questionCount.value < questions.length ) {
         selectedQuestion.value = questions[questionCount.value];
@@ -166,6 +175,9 @@ form{
 .answer > input{
     margin-right: 10px;
     font-size: large;
+}
+.answer:hover{
+    box-shadow: 2px 3px #fc4a1a;
 }
 form > button{
     border: 1px solid #fc4a1a;
