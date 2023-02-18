@@ -1,3 +1,15 @@
+<script lang="ts">
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+import { defineComponent } from "vue";
+
+const Score = defineComponent({
+  props: ["score"],
+});
+
+export default Score;
+</script>
 <template>
   <div class="abc">
     <div class="wrapper">
@@ -6,26 +18,20 @@
       </div>
       <div>
         <p class="title">Congratulations!</p>
-        <p class="content">You have achieved 3 correct answers</p>
+        <p class="content">You have achieved {{ score }} correct answers</p>
       </div>
       <div class="button_restart">
-        <button class="restart">Restart</button>
+        <button class="restart" @click="$router.push('/')">Restart</button>
       </div>
     </div>
-   
   </div>
 </template>
-
-<script lang="ts">
-export default {};
-</script>
-
 <style scoped>
-.abc{
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
+.abc {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
 }
 .wrapper {
   height: 550px;

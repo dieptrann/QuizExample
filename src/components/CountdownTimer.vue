@@ -35,9 +35,23 @@ export default Countdowner;
 </script>
 
 <template>
-  <div>
-    <p>{{ minutes }}:{{ seconds < 10 ? "0" + seconds : seconds }}</p>
+  <div class="timer">
+    <p>
+      Time lefts: {{ minutes }}:{{ seconds < 10 ? "0" + seconds : seconds }}
+    </p>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.timer {
+  background-color: #fc4a1a;
+  color: white;
+  padding: 4px 20px;
+  border-radius: 10px;
+}
+.timer p {
+  text-align: center;
+  vertical-align: middle;
+  margin: 0;
+}
+</style>
