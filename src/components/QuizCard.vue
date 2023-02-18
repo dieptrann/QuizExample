@@ -24,11 +24,16 @@
         <div class="score" v-else>
             score is {{ score }} out of {{ questions.length }}
         </div>
+        <div>  <CountdownTimer /></div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import CountdownTimer from "./CountdownTimer.vue";
+
+const status = false;
+
 const questions = [
     {
         "question":"what is 1 + 1 ",
