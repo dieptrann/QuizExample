@@ -30,17 +30,14 @@
         :percentage="value"
         indicator-text-color="#fb521b"
       />
-      <form v-if="!showScore">
+      <form>
         <div class="question">{{ getCurrentQuestion.question }}</div>
         <div class="answers" :key="getCurrentQuestion.index">
-          <!-- selectedOption.value == i ? i === selectedOption.correctAnswer  -->
-          <!-- v-bind:style="{ 'background-color': background(selectedOption) }" -->
-          <!-- @click="handlegetCurrentQuestion(selectedOption)" -->
           <label
             class="answer"
             v-for="(item, i) in getCurrentQuestion.answers"
             :key="i"
-            :for="'option' + i"
+            :for="`option`+i"
             :class="` ${
               getCurrentQuestion.selected == i
                 ? i == getCurrentQuestion.correctAnswer
@@ -53,12 +50,10 @@
               'correct'
             }`"
           >
-            <!-- :id="`option${i}`"
-              name="answers" -->
             <input
               type="radio"
-              :id="'option' + i"
               :name="`question ` + getCurrentQuestion.index"
+              :id="`option` + i"
               :value="i"
               :key="i"
               :disabled="Boolean(getCurrentQuestion.selected)"
@@ -83,9 +78,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineComponent, computed } from "vue";
+import { ref, computed } from "vue";
 import Congratulation from "./Congratulation.vue";
-// import CountdownTimer from "./CountdownTimer.vue";
 import { changeColor } from "seemly";
 import { useThemeVars, NProgress } from "naive-ui";
 
@@ -93,14 +87,14 @@ const status = false;
 interface Question {
   question: string;
   answers: string[];
-  correctAnswer: number;
+  correctAnswer: string;
   selected: number | null;
   index?: number;
 }
 const questions = ref<Question[]>([
   {
     question: "What does HTML stand for?",
-    correctAnswer: 0,
+    correctAnswer: "0",
     answers: [
       "Hyper Text Markup Language",
       "Hyperlinks and Text Markup Language",
@@ -112,7 +106,7 @@ const questions = ref<Question[]>([
   },
   {
     question: "What does CSS stand for?",
-    correctAnswer: 1,
+    correctAnswer: "1",
     answers: [
       "Computer Style Sheets",
       "Cascading Style Sheets",
@@ -123,7 +117,7 @@ const questions = ref<Question[]>([
   },
   {
     question: "What does DOM stand for?",
-    correctAnswer: 2,
+    correctAnswer: "2",
     answers: [
       "Document Object Model",
       "Digital Object Model",
@@ -134,7 +128,7 @@ const questions = ref<Question[]>([
   },
   {
     question: "What does API stand for?",
-    correctAnswer: 3,
+    correctAnswer: "3",
     answers: [
       "Application Programming Interface",
       "Application Program Interface",
@@ -144,21 +138,19 @@ const questions = ref<Question[]>([
     selected: null,
   },
 ]);
-// const score = ref(0);
+console.log("questions", questions);
+
 const currentQuestion = ref(0);
-// const selectedOption = ref();
 const questionCount = ref(1);
-// const selectedQuestion = ref(questions[0]);
 const showScore = ref(false);
 const value = ref(0);
-// const max = ref(100);
-// const isActive = ref(false);
 
 const minutes = ref(15);
 const seconds = ref(0);
 const countdown = () => {
   if (seconds.value === 0) {
     if (minutes.value === 0) {
+      showScore.value = true;
     } else {
       minutes.value--;
       seconds.value = 59;
@@ -166,12 +158,18 @@ const countdown = () => {
   } else {
     seconds.value--;
   }
-
-  if (seconds.value === 0 && seconds.value === 0) {
-    showScore.value = true;
-  }
 };
 setInterval(countdown, 1000);
+
+// const questions = ref([]);
+//  const res = await axios
+//   .get("https://63f078825703e063fa46909c.mockapi.io/questions")
+//   .then((data: any) => {
+//     questions.value = data.data;
+//   })
+//   .catch((err) => console.log("err"));
+
+// console.log("questions", questions);
 
 const getCurrentQuestion = computed(() => {
   let question = questions.value[currentQuestion.value];
@@ -179,27 +177,7 @@ const getCurrentQuestion = computed(() => {
   return question;
 });
 
-// const questions = axios.get('https://63f078825703e063fa46909c.mockapi.io/questions')
-
-// const submitAnswer = () => {
-//   // console.log("selectedOption.value", selectedOption._value);
-//   if (selectedQuestion.value.correctAnswer === selectedOption.value) {
-//     console.log("selectedOption.value", selectedOption.value);
-
-//     score.value++;
-//     isActive.value = true;
-//   }
-//   if (questionCount.value < questions.length) {
-//     selectedQuestion.value = questions[questionCount.value];
-//     questionCount.value++;
-//     selectedOption.value = "";
-//     value.value += (1 / questions.length) * 100;
-//   } else {
-//     showScore.value = true;
-//   }
-// };
-
-const SetAnswer = (e: any) => {
+const SetAnswer = (e: { target: { value: string | null } }) => {
   questions.value[currentQuestion.value].selected = e.target.value;
   e.target.value = null;
 };
@@ -207,9 +185,12 @@ const SetAnswer = (e: any) => {
 const score = computed(() => {
   let value = 0;
   questions.value.map((ques) => {
-    if (ques.correctAnswer === Number(ques.selected)) {
+    if (ques.correctAnswer === ques.selected) {
+      console.log("ques", ques.selected);
       value++;
+      console.log("value", value);
     }
+
   });
   return value;
 });
@@ -223,7 +204,6 @@ const NextQuestion = () => {
     showScore.value = true;
   }
 };
-const themeVars = useThemeVars();
 </script>
 
 <style scoped>
