@@ -47,6 +47,10 @@
                   ? 'correct'
                   : 'wrong'
                 : ''
+            } ${
+              getCurrentQuestion.selected &&
+              getCurrentQuestion.correctAnswer == i &&
+              'correct'
             }`"
           >
             <!-- :id="`option${i}`"
@@ -86,37 +90,57 @@ import { changeColor } from "seemly";
 import { useThemeVars, NProgress } from "naive-ui";
 
 const status = false;
-
-const questions = ref([
+interface Question {
+  question: string;
+  answers: string[];
+  correctAnswer: number;
+  selected: number | null;
+  index?: number;
+}
+const questions = ref<Question[]>([
   {
-    question: "what is 1 + 1 ",
-    answers: ["2", "3", "6", "7"],
+    question: "What does HTML stand for?",
     correctAnswer: 0,
+    answers: [
+      "Hyper Text Markup Language",
+      "Hyperlinks and Text Markup Language",
+      "Home Tool Markup Language",
+      "None of the above",
+    ],
     selected: null,
     index: 0,
   },
   {
-    question: "what is 2 * 2 ",
-    answers: ["2", "3", "4", "10"],
-    correctAnswer: 2,
-    selected: null,
-  },
-  {
-    question: "what is 10 / 5 ",
-    answers: ["2", "5", "6", "7"],
-    correctAnswer: 0,
-    selected: null,
-  },
-  {
-    question: "what is 3 + 2",
-    answers: ["5", "3", "6", "7"],
-    correctAnswer: 0,
-    selected: null,
-  },
-  {
-    question: "what is 7 - 4  ",
-    answers: ["1", "3", "6", "7"],
+    question: "What does CSS stand for?",
     correctAnswer: 1,
+    answers: [
+      "Computer Style Sheets",
+      "Cascading Style Sheets",
+      "Creative Style Sheets",
+      "None of the above",
+    ],
+    selected: null,
+  },
+  {
+    question: "What does DOM stand for?",
+    correctAnswer: 2,
+    answers: [
+      "Document Object Model",
+      "Digital Object Model",
+      "Data Object Model",
+      "None of the above",
+    ],
+    selected: null,
+  },
+  {
+    question: "What does API stand for?",
+    correctAnswer: 3,
+    answers: [
+      "Application Programming Interface",
+      "Application Program Interface",
+      "Application Processor Interface",
+      "None of the above",
+    ],
     selected: null,
   },
 ]);
@@ -130,7 +154,7 @@ const value = ref(0);
 // const max = ref(100);
 // const isActive = ref(false);
 
-const minutes = ref(10);
+const minutes = ref(15);
 const seconds = ref(0);
 const countdown = () => {
   if (seconds.value === 0) {
@@ -154,6 +178,8 @@ const getCurrentQuestion = computed(() => {
   question.index = currentQuestion.value;
   return question;
 });
+
+// const questions = axios.get('https://63f078825703e063fa46909c.mockapi.io/questions')
 
 // const submitAnswer = () => {
 //   // console.log("selectedOption.value", selectedOption._value);
@@ -198,9 +224,6 @@ const NextQuestion = () => {
   }
 };
 const themeVars = useThemeVars();
-
-
-
 </script>
 
 <style scoped>
