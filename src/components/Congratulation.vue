@@ -5,7 +5,7 @@ const router = useRouter();
 import { defineComponent } from "vue";
 
 const Score = defineComponent({
-  props: ["score"],
+  props: ["score","questions"],
 });
 
 export default Score;
@@ -18,7 +18,9 @@ export default Score;
       </div>
       <div>
         <p class="title">Congratulations!</p>
-        <p class="content">You have achieved {{ score }} correct answers</p>
+        <!-- You have achieved  correct answers -->
+        <p class="content">Your score is <span style="font-size: 22px; color: #fc4a1a; font-weight: bold;">{{ score }}</span> / {{ questions.length   }}</p>
+        <!-- <p>{{ questions }}</p> -->
       </div>
       <div class="button_restart">
         <button class="restart" @click="$router.push('/')">Restart</button>

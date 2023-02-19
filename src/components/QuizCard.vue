@@ -12,7 +12,7 @@
         <img class="icon8" src="../assets/img/img-8.png" />
       </div>
       <div class="header__quiz">
-        <p>{{ questionCount }} of {{ questions.length }} questions</p>
+        <!-- <p>{{ questionCount }} of {{ questions.length }} questions</p> -->
         <CountdownTimer />
       </div>
       <n-progress
@@ -24,89 +24,147 @@
         :percentage="value"
         indicator-text-color="#fb521b"
       />
-      <form @submit.prevent="submitAnswer" v-if="!showScore">
-        <div class="question">{{ selectedQuestion.question }}</div>
-        <div class="answers">
-          <label class="answer" v-for="(item, i) in selectedQuestion.answers">
+      <!-- <form v-if="!showScore">
+        <div class="question">{{ getCurrentQuestion.question }}</div>
+        <div class="answers" :key="getCurrentQuestion.index">
+        
+          <label
+            class="answer"
+            v-for="(item, i) in getCurrentQuestion.answers"
+            :key="i"
+            :for="'option' + i"
+            :class="` ${
+              getCurrentQuestion.selected == i
+                ? i == getCurrentQuestion.correctAnswer
+                  ? 'correct'
+                  : 'wrong'
+                : ''
+            }`"
+          >
+         
             <input
               type="radio"
-              :id="`option${i}`"
-              name="answers"
-              v-model="selectedOption"
-              :value="item"
+              :id="'option' + i"
+              :name="`question ` + getCurrentQuestion.index"
+              :value="i"
+              :key="i"
+              :disabled="Boolean(getCurrentQuestion.selected)"
+              @change="SetAnswer"
             />
             <label :for="`option${i}`">{{ item }}</label>
           </label>
         </div>
-        <button>Submit</button>
-      </form>
+        <button
+          @click.prevent="NextQuestion"
+          :disabled="!getCurrentQuestion.selected"
+        >
+          {{ questionCount === questions.length ? "Finish" : "Next" }}
+        </button>
+      </form> -->
     </div>
   </div>
 
   <div v-else="showScore">
-    <Congratulation :score="score" />
+    <!-- <Congratulation :score="score" :questions="questions" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineComponent } from "vue";
+import { ref, defineComponent, computed } from "vue";
 import Congratulation from "./Congratulation.vue";
 import CountdownTimer from "./CountdownTimer.vue";
 import { changeColor } from "seemly";
 import { useThemeVars, NProgress } from "naive-ui";
+import axios from "axios";
 
 const status = false;
 
-const questions = [
-  {
-    question: "what is 1 + 1 ",
-    answers: ["2", "3", "6", "7"],
-    correctAnswer: "2",
-  },
-  {
-    question: "what is 2 * 2 ",
-    answers: ["2", "3", "4", "10"],
-    correctAnswer: "4",
-  },
-  {
-    question: "what is 10 / 5 ",
-    answers: ["2", "5", "6", "7"],
-    correctAnswer: "2",
-  },
-  {
-    question: "what is 3 + 2",
-    answers: ["5", "3", "6", "7"],
-    correctAnswer: "5",
-  },
-  {
-    question: "what is 7 - 6  ",
-    answers: ["1", "3", "6", "7"],
-    correctAnswer: "1",
-  },
-];
-const score = ref(0);
-const selectedOption = ref("");
+// const questions = ref([
+//   {
+//     question: "what is 1 + 1 ",
+//     answers: ["2", "3", "6", "7"],
+//     correctAnswer: 0,
+//     selected: null,
+//     index: 0,
+//   },
+//   {
+//     question: "what is 2 * 2 ",
+//     answers: ["2", "3", "4", "10"],
+//     correctAnswer: 2,
+//     selected: null,
+//   },
+//   {
+//     question: "what is 10 / 5 ",
+//     answers: ["2", "5", "6", "7"],
+//     correctAnswer: 0,
+//     selected: null,
+//   },
+//   {
+//     question: "what is 3 + 2",
+//     answers: ["5", "3", "6", "7"],
+//     correctAnswer: 0,
+//     selected: null,
+//   },
+//   {
+//     question: "what is 7 - 4  ",
+//     answers: ["1", "3", "6", "7"],
+//     correctAnswer: 1,
+//     selected: null,
+//   },
+// ]);
+// const score = ref(0);
+const currentQuestion = ref(0);
+const selectedOption = ref();
 const questionCount = ref(1);
-const selectedQuestion = ref(questions[0]);
+// const selectedQuestion = ref(questions[0]);
 const showScore = ref(false);
 const value = ref(0);
 const max = ref(100);
 const isActive = ref(false);
 
-const submitAnswer = () => {
-  if (selectedQuestion.value.correctAnswer == selectedOption.value) {
-    score.value++;
-    isActive.value = true;
-  }
-  if (questionCount.value < questions.length) {
-    selectedQuestion.value = questions[questionCount.value];
-    questionCount.value++;
-    selectedOption.value = "";
-    value.value += (1 / questions.length) * 100;
-  } else {
-    showScore.value = true;
-  }
-};
+const questions = ref(
+  axios
+    .get("https://63f078825703e063fa46909c.mockapi.io/questions")
+    .then((res) => {
+      console.log(res.data);
+      res.data;
+    })
+);
+
+console.log("questions", questions);
+// const getCurrentQuestion = computed(() => {
+//   let question = questions.value[currentQuestion.value];
+//   question.index = currentQuestion.value;
+//   return question;
+// });
+
+// const SetAnswer = (e: any) => {
+//   questions.value[currentQuestion.value].selected = e.target.value;
+//   e.target.value = null;
+// };
+
+// const score = computed(() => {
+//   let value = 0;
+//   questions.value.map((ques) => {
+//     console.log("ques.selected", ques.selected);
+//     console.log("ques.correctAnswer", ques.correctAnswer);
+//     if (ques.correctAnswer === Number(ques.selected)) {
+//       value++;
+//     }
+//     console.log("value", value);
+//   });
+//   return value;
+// });
+
+// const NextQuestion = () => {
+//   if (questionCount.value < questions.value.length) {
+//     currentQuestion.value++;
+//     questionCount.value++;
+//     value.value += (1 / questions.value.length) * 100;
+//   } else {
+//     showScore.value = true;
+//   }
+// };
 const themeVars = useThemeVars();
 </script>
 
@@ -226,5 +284,15 @@ form > button {
   cursor: pointer;
   display: block;
   margin: auto;
+}
+
+.correct {
+  color: #ececec;
+  background-color: green;
+}
+
+.wrong {
+  color: #ececec;
+  background-color: red;
 }
 </style>
