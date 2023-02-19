@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 import { ref, defineComponent } from "vue";
 
 const Countdowner = defineComponent({
@@ -54,4 +54,4 @@ export default Countdowner;
   vertical-align: middle;
   margin: 0;
 }
-</style>
+</style> -->
