@@ -13,7 +13,13 @@
       </div>
       <div class="header__quiz">
         <p>{{ questionCount }} of {{ questions.length }} questions</p>
-        <CountdownTimer />
+        <div class="timer">
+          <p>
+            Time lefts: {{ minutes }}:{{
+              seconds < 10 ? "0" + seconds : seconds
+            }}
+          </p>
+        </div>
       </div>
       <n-progress
         style="padding-top: 10px"
@@ -75,7 +81,7 @@
 <script setup lang="ts">
 import { ref, defineComponent, computed } from "vue";
 import Congratulation from "./Congratulation.vue";
-import CountdownTimer from "./CountdownTimer.vue";
+// import CountdownTimer from "./CountdownTimer.vue";
 import { changeColor } from "seemly";
 import { useThemeVars, NProgress } from "naive-ui";
 
@@ -116,13 +122,32 @@ const questions = ref([
 ]);
 // const score = ref(0);
 const currentQuestion = ref(0);
-const selectedOption = ref();
+// const selectedOption = ref();
 const questionCount = ref(1);
 // const selectedQuestion = ref(questions[0]);
 const showScore = ref(false);
 const value = ref(0);
-const max = ref(100);
-const isActive = ref(false);
+// const max = ref(100);
+// const isActive = ref(false);
+
+const minutes = ref(10);
+const seconds = ref(0);
+const countdown = () => {
+  if (seconds.value === 0) {
+    if (minutes.value === 0) {
+    } else {
+      minutes.value--;
+      seconds.value = 59;
+    }
+  } else {
+    seconds.value--;
+  }
+
+  if (seconds.value === 0 && seconds.value === 0) {
+    showScore.value = true;
+  }
+};
+setInterval(countdown, 1000);
 
 const getCurrentQuestion = computed(() => {
   let question = questions.value[currentQuestion.value];
@@ -156,12 +181,9 @@ const SetAnswer = (e: any) => {
 const score = computed(() => {
   let value = 0;
   questions.value.map((ques) => {
-    console.log("ques.selected", ques.selected);
-    console.log("ques.correctAnswer", ques.correctAnswer);
     if (ques.correctAnswer === Number(ques.selected)) {
       value++;
     }
-    console.log("value", value);
   });
   return value;
 });
@@ -307,5 +329,16 @@ form > button {
 .wrong {
   color: #ececec;
   background-color: red;
+}
+.timer {
+  background-color: #fc4a1a;
+  color: white;
+  padding: 4px 20px;
+  border-radius: 10px;
+}
+.timer p {
+  text-align: center;
+  vertical-align: middle;
+  margin: 0;
 }
 </style>
