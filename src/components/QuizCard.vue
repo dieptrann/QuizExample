@@ -42,14 +42,14 @@
             :key="i"
             :for="'option' + i"
             :class="` ${
-              getCurrentQuestion.selected == i
-                ? i == getCurrentQuestion.correctAnswer
+              getCurrentQuestion.selected == (i).toString()
+                ? (i).toString() == getCurrentQuestion.correctAnswer
                   ? 'correct'
                   : 'wrong'
                 : ''
             } ${
               getCurrentQuestion.selected &&
-              getCurrentQuestion.correctAnswer == i &&
+              getCurrentQuestion.correctAnswer == (i).toString() &&
               'correct'
             }`"
           >
@@ -93,55 +93,55 @@ const status = false;
 interface Question {
   question: string;
   answers: string[];
-  correctAnswer: number;
-  selected: number | null;
+  correctAnswer: string;
+  selected: string | '';
   index?: number;
 }
 const questions = ref<Question[]>([
   {
     question: "What does HTML stand for?",
-    correctAnswer: 0,
+    correctAnswer: '1',
     answers: [
-      "Hyper Text Markup Language",
       "Hyperlinks and Text Markup Language",
+      "Hyper Text Markup Language",
       "Home Tool Markup Language",
       "None of the above",
     ],
-    selected: null,
+    selected: '',
     index: 0,
   },
   {
     question: "What does CSS stand for?",
-    correctAnswer: 1,
+    correctAnswer: '1',
     answers: [
       "Computer Style Sheets",
       "Cascading Style Sheets",
       "Creative Style Sheets",
       "None of the above",
     ],
-    selected: null,
+    selected: '',
   },
   {
     question: "What does DOM stand for?",
-    correctAnswer: 2,
+    correctAnswer: '2',
     answers: [
       "Document Object Model",
       "Digital Object Model",
       "Data Object Model",
       "None of the above",
     ],
-    selected: null,
+    selected: '',
   },
   {
     question: "What does API stand for?",
-    correctAnswer: 3,
+    correctAnswer: '3',
     answers: [
       "Application Programming Interface",
-      "Application Program Interface",
       "Application Processor Interface",
       "None of the above",
+      "Application Program Interface",
     ],
-    selected: null,
+    selected: '',
   },
 ]);
 // const score = ref(0);
@@ -154,11 +154,12 @@ const value = ref(0);
 // const max = ref(100);
 // const isActive = ref(false);
 
-const minutes = ref(15);
+const minutes = ref(20);
 const seconds = ref(0);
 const countdown = () => {
   if (seconds.value === 0) {
     if (minutes.value === 0) {
+       showScore.value = true;
     } else {
       minutes.value--;
       seconds.value = 59;
@@ -167,9 +168,7 @@ const countdown = () => {
     seconds.value--;
   }
 
-  if (seconds.value === 0 && seconds.value === 0) {
-    showScore.value = true;
-  }
+
 };
 setInterval(countdown, 1000);
 
@@ -199,15 +198,15 @@ const getCurrentQuestion = computed(() => {
 //   }
 // };
 
-const SetAnswer = (e: any) => {
+const SetAnswer = (e: {target:{value:string|''}}) => {
   questions.value[currentQuestion.value].selected = e.target.value;
-  e.target.value = null;
+  e.target.value = '';
 };
 
 const score = computed(() => {
   let value = 0;
   questions.value.map((ques) => {
-    if (ques.correctAnswer === Number(ques.selected)) {
+    if (ques.correctAnswer === ques.selected) {
       value++;
     }
   });
